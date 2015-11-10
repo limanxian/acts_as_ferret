@@ -81,7 +81,7 @@ module ActsAsFerret
         else
           order = "#{primary_key} ASC" # fixes #212
           0.step(self.count, batch_size) do |offset|
-            yield scoped.limit(batch_size).offset(offset).order(order).all, offset
+            yield all.limit(batch_size).offset(offset).order(order).all, offset
           end
         end
       end
@@ -146,7 +146,7 @@ module ActsAsFerret
     # +page+ and +per_page+ are supposed to work regardless of any 
     # +conditions+ present in +find_options+.
     def find_with_ferret(q, options = {}, find_options = {})
-      if self.scoped.to_sql =~ /WHERE/ && self.scoped.where_values_hash.empty?
+      if self.all.to_sql =~ /WHERE/ && self.all.where_values_hash.empty?
         # Treat external scope the same as if :conditions present 
         # (i.e. when it comes to counting results). 
         find_options[:conditions] ||= '1=1'
